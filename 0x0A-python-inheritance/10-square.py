@@ -32,4 +32,4 @@ class Square(Rectangle):
 
     def __str__(self):
         return ("[{}] {}/{}".format("Rectangle",
-                                    self.__size, self.__siz)
+                                    self.__size, self.__size)
