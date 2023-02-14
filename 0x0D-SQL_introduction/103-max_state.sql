@@ -1,6 +1,5 @@
--- Script that displays the max temperature of each state
--- Query to display the max temperature of each state
+-- displays average temp by city in descending order
 SELECT state, MAX(value) AS max_temp
 FROM temperatures
 GROUP BY state
-LIMIT 3;
+ORDER BY max_temp DESC;
