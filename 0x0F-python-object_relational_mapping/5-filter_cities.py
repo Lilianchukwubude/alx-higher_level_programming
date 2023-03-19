@@ -1,27 +1,25 @@
 #!/usr/bin/python3
-"""
-lists all cities from the database
-"""
-if __name__ == "__main__":
+"""script that takes in the name of a state as an argument and
+lists all cities of that state, using hbtn_0e_4_usa"""
+import MySQLdb
+import sys
 
-    import MySQLdb
-    from sys import argv
 
-    cont = 0
-    conect = MySQLdb.connect(host="localhost", port=3306, user=argv[1],
-                             passwd=argv[2], db=argv[3], charset="utf8")
-    cursor = conect.cursor()
-    cursor.execute("""SELECT cities.id, cities.name, states.name
-    FROM cities
-    LEFT JOIN states ON cities.state_id = states.id
-    ORDER BY cities.id ASC""")
-    query_rows = cursor.fetchall()
-    for row in query_rows:
-        if row[2] == argv[4]:
-            if cont > 0:
-                print(", ", end="")
-            print(row[1], end="")
-            cont = cont + 1
-    print()
-    cursor.close()
-    conect.close()
+if __name__ == '__main__':
+
+    db = MySQLdb.connect(host="localhost", port=3306,
+                         user=sys.argv[1], passwd=sys.argv[2],
+                         db=sys.argv[3], charset="utf8")
+    cr = db.cursor()
+    myQuery = " ".join([
+        "SELECT cities.name FROM cities",
+        "INNER JOIN states ON states.id = cities.state_id",
+        "WHERE states.name LIKE BINARY '{}'",
+        "ORDER BY cities.id",
+        ]).format(sys.argv[4])
+    cr.execute(myQuery)
+    res = cr.fetchall()
+    strRes = ', '.join([i[0] for i in res])
+    print(strRes)
+    cr.close()
+    db.close()
